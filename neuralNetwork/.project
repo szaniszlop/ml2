@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>neuralNetwork</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>src/test/java/com/ps/neuron/network/mnist_test.json</name>
+			<type>1</type>
+			<location>C:/Users/szaniszlop/workspace/neuralNetwork/src/test/java/com/ps/neuron/network/mnist_test.json</location>
+		</link>
+		<link>
+			<name>src/test/java/com/ps/neuron/network/mnist_training.json</name>
+			<type>1</type>
+			<location>C:/Users/szaniszlop/workspace/neuralNetwork/src/test/java/com/ps/neuron/network/mnist_training.json</location>
+		</link>
+	</linkedResources>
+</projectDescription>
