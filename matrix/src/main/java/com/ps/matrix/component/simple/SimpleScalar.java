@@ -17,7 +17,7 @@ public class SimpleScalar extends BaseTensor implements Scalar{
 	}
 	
 	public SimpleScalar(double value){
-		this(value, new DeferedOperatorFactory());
+		this(value, DeferedOperatorFactory.getInstance());
 	}
 	
 	@Override

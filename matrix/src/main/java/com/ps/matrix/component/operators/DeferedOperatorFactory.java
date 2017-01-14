@@ -10,7 +10,18 @@ import com.ps.matrix.model.UnaryOperator;
 
 public class DeferedOperatorFactory implements OperatorFactory{
 
-
+	private static OperatorFactory instance;
+	
+	static {
+		instance = new DeferedOperatorFactory();
+	}
+	
+	public static OperatorFactory getInstance(){
+		return instance;
+	}
+		
+	private DeferedOperatorFactory(){}
+	
 	@Override
 	public BinaryOperator add(Operand a, Operand b) {
 		BinaryOperator operator = new DeferedMatrixAdditionOperator();
@@ -134,6 +145,11 @@ public class DeferedOperatorFactory implements OperatorFactory{
 		}
 
 		@Override
+		public double apply(double a, double b) {
+			throw new UnsupportedOperationException("Binary operation required");
+		}
+
+		@Override
 		public String getName() {
 			return "+";
 		}
@@ -152,6 +168,11 @@ public class DeferedOperatorFactory implements OperatorFactory{
 		@Override
 		public double apply(double[] input) {
 			return input[0] * value;
+		}
+
+		@Override
+		public double apply(double a, double b) {
+			throw new UnsupportedOperationException("Binary operation required");
 		}
 
 		@Override

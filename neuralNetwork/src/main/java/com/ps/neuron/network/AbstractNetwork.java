@@ -64,7 +64,7 @@ public abstract class AbstractNetwork implements Network, TraineableNetwork {
 	
 	public double[] getOutput(double[] input){
 		assert input.length == inputLayerSize;
-		Matrix inputSignal = mf.newColumnMatrix(mf.newVector(input));
+		Matrix inputSignal = mf.newRowMatrix(mf.newVector(input));
 		Matrix result = feedForward(inputSignal);
 		return result.getRow(0).getRawData();
 	}
@@ -97,7 +97,7 @@ public abstract class AbstractNetwork implements Network, TraineableNetwork {
 	}
 	
 	protected Tensor inputSignalTransformation(Matrix inputSignal){
-		return inputSignal.T();
+		return inputSignal;
 	}
 	
 	private void informTrainerAboutOutput(Tensor a){
@@ -150,10 +150,25 @@ public abstract class AbstractNetwork implements Network, TraineableNetwork {
 
 	public void setOutputLayerB(Tensor outputLayerB) {
 		if(outputLayerB.getType() == ValueType.MATRIX){
-			this.outputLayerB = (Matrix)outputLayerB;
+			this.outputLayerB = outputLayerB;
 		} else {
 			throw new RuntimeException("Incorrect result + " + outputLayerB);
 		}
 	}
+
+	@Override
+	public String toString() {
+		for(Tensor t : hiddenLayersW){
+			System.out.println("Hidden layer W");
+			System.out.println(t);
+		}
+		for(Tensor t : hiddenLayersB){
+			System.out.println("Hidden layer B");
+			System.out.println(t);
+		}
+		return super.toString();
+	}
+	
+	
 
 }

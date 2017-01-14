@@ -50,16 +50,16 @@ public abstract class AbstractDeferedMatrixOperator implements Operator {
 	}
 
 	public Result applyInternal() {
-		Result result = null;
+		Result myResult = null;
 		checkCompatibility();
 		if(getResultRows() > GlobalExecutorService.PARALLEL_LIMIT && getResultCols() > GlobalExecutorService.PARALLEL_LIMIT){
-			result = computeParallel();
+			myResult = computeParallel();
 		} else {
-			result = compute();
+			myResult = compute();
 		}
 		
-		// System.out.println("result of (" + first.getName() + getOperationName() + second.getName() + ") is: \n" + result );
-		return result;
+		// System.out.println("result of (" + first.getName() + getOperationName() + second.getName() + ") is: \n" + myResult );
+		return myResult;
 	}
 	
 	protected abstract void freeOperands();
@@ -70,26 +70,38 @@ public abstract class AbstractDeferedMatrixOperator implements Operator {
 	
 	private Result compute (){
 		// System.out.println("Compute " +this.getClass().getCanonicalName()  );
-		Matrix result = new SimpleMatrix();
+		double[] resData = new double[getResultRows() * getResultCols()];
+		
 		for(int i = 0 ; i < getResultRows() ; i++){
-			result.addRow(computeRow(i));
+			System.arraycopy(computeRow(i).getRawData(), 0, resData, i * getResultCols(), getResultCols());
 		}
-		return result;
+		return new SimpleMatrix(getResultRows(), getResultCols(), resData);
+	}
+	
+	private Result compute2 (){
+		// System.out.println("Compute " +this.getClass().getCanonicalName()  );
+		Matrix myResult = new SimpleMatrix();
+		for(int i = 0 ; i < getResultRows() ; i++){
+			myResult.addRow(computeRow(i));
+		}
+		return myResult;
 	}
 	
 	private Result computeParallel() {
 		// System.out.println("Compute Parallel " +this.getClass().getCanonicalName() );
 		List<RowTask> tasks = new ArrayList<RowTask>(getResultRows());
 		List<Future<Tensor>> results;
-		Matrix result = new SimpleMatrix();
+		double[] resData = new double[getResultRows() * getResultCols()];
 		
 		for(int i = 0 ; i < getResultRows() ; i++){
 			tasks.add(new RowTask(i));
 		}
 		try{
 			results = executionService.invokeAll(tasks);
+			int i = 0;
 			for(Future<Tensor> res : results){
-				result.addRow(res.get());
+				System.arraycopy(res.get().getRawData(), 0, resData, i * getResultCols(), getResultCols());
+				i++;
 			}
 		} catch (InterruptedException e){
 			throw new RuntimeException(e);
@@ -97,9 +109,32 @@ public abstract class AbstractDeferedMatrixOperator implements Operator {
 			throw new RuntimeException(e);
 		}
 		
-		return result;
+		return new SimpleMatrix(getResultRows(), getResultCols(), resData);
 	}
-	
+
+	private Result computeParallel2() {
+		// System.out.println("Compute Parallel " +this.getClass().getCanonicalName() );
+		List<RowTask> tasks = new ArrayList<RowTask>(getResultRows());
+		List<Future<Tensor>> results;
+		Matrix myResult = new SimpleMatrix();
+		
+		for(int i = 0 ; i < getResultRows() ; i++){
+			tasks.add(new RowTask(i));
+		}
+		try{
+			results = executionService.invokeAll(tasks);
+			for(Future<Tensor> res : results){
+				myResult.addRow(res.get());
+			}
+		} catch (InterruptedException e){
+			throw new RuntimeException(e);
+		} catch (ExecutionException e) {
+			throw new RuntimeException(e);
+		}
+		
+		return myResult;
+	}
+
 	private final class RowTask implements Callable<Tensor>{
 
 		int row;

@@ -75,7 +75,7 @@ public class GradientDescentTrainer implements Trainer {
 				result.add(new Pair<Tensor, Tensor>(in, out));
 			}
 		}
-		System.out.println("Mini Batch number: " + miniBatchNumber);
+		// System.out.println("Mini Batch number: " + miniBatchNumber);
 		return result;
 	}
 	
@@ -102,7 +102,7 @@ public class GradientDescentTrainer implements Trainer {
 	}
 	
 	private Pair<List<Tensor>, List<Tensor>> backprop(TraineableNetwork network, Tensor networkOutput, Tensor desiredOutput){
-		System.out.println("*************************  BACKPROPAGATION **********************");
+		// System.out.println("*************************  BACKPROPAGATION **********************");
 		List<Tensor> deltaB = new ArrayList<Tensor>();
 		List<Tensor> deltaW = new ArrayList<Tensor>();
 		
@@ -110,17 +110,23 @@ public class GradientDescentTrainer implements Trainer {
 		Collections.reverse(z);
 		Function sigmaPrime = network.getActivationFunction().primeFunction();
 		
-		// sigma(L) = Y - A(L) * sigma_prime(Z(L))
+		// sigma(L) = (A(L) - Y) * sigma_prime(Z(L))
 		// delta_B(l) = delta(l)
 		// delta_W(l) = T(T(delta(l) * activation(l-1)))
 		
 		// System.out.println("Network output: " + networkOutput.toString());
 		// System.out.println("Desired output: " + desiredOutput.toString());
 		
-		Tensor delta = networkOutput.minus(desiredOutput);
+		// Tensor delta = networkOutput.minus(desiredOutput);
+		Tensor deltaOutput = networkOutput.minus(desiredOutput);
 		
-		System.out.println("Delta output size: " + delta.l2Metric());
+		// Tensor delta = deltaOutput.hadanardMultiply(z.get(0).apply(sigmaPrime));
 		
+		Tensor delta = deltaOutput;
+		
+		// System.out.println("Delta output size: " + delta.l2Metric());
+		// System.out.println("Delta output : " + delta);
+				
 		// Delta W and delta B for the last layer
 		// delta_B(l) = delta(l)
 		deltaB.add(delta);
@@ -129,14 +135,17 @@ public class GradientDescentTrainer implements Trainer {
 		
 		// iterate over layers using the activation function array
 		for(int i = 1 ; i < z.size() ; i++){
-
+			
 			// delta(l) = T(W(l+1) * T(delta(l+1))) (*) sigma_prime(Z(l))
-			delta = weights.get(i - 1).multiply(delta.T()).T().hadanardMultiply(z.get(i).apply(sigmaPrime));		
+			Tensor newDelta = weights.get(i - 1).multiply(delta.T()).T().hadanardMultiply(z.get(i).apply(sigmaPrime));		
 			
 			// delta_B(l) = delta(l)
-			deltaB.add(delta);
+			deltaB.add(newDelta);
 			// delta_W(l) = T(T(delta(l) * activation(l-1)))
-			deltaW.add(delta.T().multiply(activations.get(i+1)).T());			
+			Tensor deltaWeights = newDelta.T().multiply(activations.get(i+1)).T();
+			deltaW.add(deltaWeights);
+			delta = newDelta;
+			
 		}
 		// Reverse deltas back 
 		Collections.reverse(deltaB);
@@ -145,7 +154,7 @@ public class GradientDescentTrainer implements Trainer {
 	}
 
 	private void aggregateError(Pair<List<Tensor>, List<Tensor>> deltaWB){
-		System.out.println("*********************** AGGREGATE ERRORS  ************************");
+		// System.out.println("*********************** AGGREGATE ERRORS  ************************");
 		int layer = 0;
 		for( Tensor w : deltaWB.getElement0()){
 			addDeltaW(w, layer++);
@@ -158,12 +167,12 @@ public class GradientDescentTrainer implements Trainer {
 	}
 	
 	private void addDeltaB(Tensor b, int layer){
-		// System.out.println("Add Delta B");
+		//System.out.println("Add Delta B");
 		addDelta(deltaCbyB, b, layer);
 	}
 
 	private void addDeltaW(Tensor b, int layer){
-		// System.out.println("Add Delta W");
+		//System.out.println("Add Delta W");
 		addDelta(deltaCbyW, b, layer);
 	}
 
@@ -174,15 +183,16 @@ public class GradientDescentTrainer implements Trainer {
 			deltaStore.add(delta.getValue());
 		} else {
 			delta = deltaStore.get(layer);
-			// System.out.println("Add Delta");
+			//System.out.println("Add Delta");
 			// delta_new = delta_old + b
 			Tensor deltaNew = delta.plus(b);
 			deltaStore.set(layer, deltaNew.getValue());
+			//System.out.println(deltaNew);
 		}
 	}
 	
 	private TraineableNetwork updateWeightsAndBiases(TraineableNetwork network, int minibatchSize, double eta){
-		System.out.println("*********************** UPDATE WEIGHTS AND BIASES  ************************");
+		// System.out.println("*********************** UPDATE WEIGHTS AND BIASES  ************************");
 		// w_new = w_old - eta/m * aggregatedWeightError
 		// b_new = b_old - eta/m * aggregatedBiasError
 		
@@ -216,6 +226,10 @@ public class GradientDescentTrainer implements Trainer {
 		network.setOutputLayerW(newWeights.get(newWeights.size()-1));
 		newWeights.remove(newWeights.size()-1);
 		network.setHiddenLayersW(newWeights);
+		
+		network.setOutputLayerB(newBiases.get(newBiases.size()-1));
+		newBiases.remove(newBiases.size()-1);
+		network.setHiddenLayersB(newBiases);
 		return network;
 	}
 	

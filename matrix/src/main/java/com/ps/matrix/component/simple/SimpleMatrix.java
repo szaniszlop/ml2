@@ -4,7 +4,6 @@ import com.ps.matrix.component.generators.ZeroGenerator;
 import com.ps.matrix.component.operators.DeferedOperatorFactory;
 import com.ps.matrix.model.Matrix;
 import com.ps.matrix.model.OperatorFactory;
-import com.ps.matrix.model.Result;
 import com.ps.matrix.model.Tensor;
 import com.ps.matrix.model.ValueGenerator;
 import com.ps.matrix.model.ValueType;
@@ -29,11 +28,16 @@ public class SimpleMatrix extends BaseTensor implements Matrix {
 	}
 	
 	public SimpleMatrix(int rows, int columns){
-		this(rows, columns, new ZeroGenerator(), new DeferedOperatorFactory());
+		this(rows, columns, new ZeroGenerator(), DeferedOperatorFactory.getInstance());
+	}
+
+	public SimpleMatrix(int rows, int columns, double[] data){
+		super(DeferedOperatorFactory.getInstance());
+		init(rows, columns, data);
 	}
 
 	public SimpleMatrix(int rows, int columns, ValueGenerator generator) {
-		this(rows, columns, generator, new DeferedOperatorFactory());
+		this(rows, columns, generator, DeferedOperatorFactory.getInstance());
 	}
 	
 	public SimpleMatrix(){
@@ -133,6 +137,16 @@ public class SimpleMatrix extends BaseTensor implements Matrix {
 				this.data[ i * columns + j ] = generator.generate(i, j);
 			}
 		}
+		this._rows = rows;
+		this._columns = columns;
+	}
+
+	public void init(int rows, int columns, double[] data) {
+		assert(rows > 0);
+		assert(columns > 0);
+		assert(data != null);
+		assert(rows*columns == data.length);
+		this.data = data;
 		this._rows = rows;
 		this._columns = columns;
 	}

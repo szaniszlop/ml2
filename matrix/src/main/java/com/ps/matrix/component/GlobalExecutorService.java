@@ -5,7 +5,7 @@ import java.util.concurrent.Executors;
 
 public class GlobalExecutorService {
 
-	public static final int PARALLEL_LIMIT  = 100;
+	public static final int PARALLEL_LIMIT  = 10;
 	public static final int PARALLEL_LEVEL  = 6;
 	protected ExecutorService executionService;
 	

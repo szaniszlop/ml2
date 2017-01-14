@@ -22,11 +22,11 @@ public class SimpleVector extends BaseTensor implements Vector{
 	
 
 	public SimpleVector(){
-		this(new double[]{}, new DeferedOperatorFactory());
+		this(new double[]{}, DeferedOperatorFactory.getInstance());
 	}
 	
 	public SimpleVector(double[] data){
-		this(data, new DeferedOperatorFactory());
+		this(data, DeferedOperatorFactory.getInstance());
 	}
 	
 	protected int getLength(){
@@ -76,9 +76,12 @@ public class SimpleVector extends BaseTensor implements Vector{
 	}
 	
 	public double[] getRawData(){
+		return this.data;
+		/*
 		double[] newData = new double[getNumItems()];
 		System.arraycopy(this.data, 0, newData, 0, getNumItems());
 		return newData;
+		*/
 	}
 	
 	

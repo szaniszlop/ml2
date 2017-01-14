@@ -58,9 +58,7 @@ public class DeferedMatrixBinaryFunctionApplication extends AbstractDeferedMatri
 		double[] bValue = b.getRawData();
 		
 		for(int i = 0 ; i < aValue.length ; i++){
-			result[i] = function.apply(new double[]{
-										aValue[i], 
-										bValue[i]});
+			result[i] = function.apply(	aValue[i], bValue[i]);
 		}
 		return result;
 	}

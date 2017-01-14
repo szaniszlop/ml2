@@ -14,7 +14,7 @@ public class DeferedTensor extends BaseTensor implements Tensor, Result {
 	private boolean hasResult;
 	
 	public DeferedTensor(Operator operator){
-		super(new DeferedOperatorFactory());
+		super(DeferedOperatorFactory.getInstance());
 		this.tensor = null;
 		this.operator = operator;
 		this.hasResult = false;

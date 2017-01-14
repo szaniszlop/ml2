@@ -28,7 +28,7 @@ public class SimpleMatrixTest {
 	public void init(){
 		factory = new SimpleMatrixFactory();
 		matrix = factory.newMatrix(3, 2, new ConstantDiagonalGenerator(1));
-		of = new DeferedOperatorFactory();
+		of = DeferedOperatorFactory.getInstance();
 		System.out.println(matrix.toString());
 	}
 	
@@ -112,9 +112,34 @@ public class SimpleMatrixTest {
 
 	@Test
 	public void testTranspose1(){
+		matrix = factory.newMatrix(3, 2, new ConstantDiagonalGenerator(1));
 		Result r = matrix.T();
+		double[] result = r.getRawData();
+		double[] expectedResult = new double[]{1d, 0d, 0d, 0d, 1d, 0d};
 		System.out.println(r);
+		Assert.assertArrayEquals(expectedResult, result, 0d);
 	}
+
+	@Test
+	public void testTranspose2(){
+		matrix = factory.newMatrix(2, 3, new double[]{1d, 2d, 3d, 4d, 5d, 6d});
+		Result r = matrix.T();
+		double[] result = r.getRawData();
+		double[] expectedResult = new double[]{1d, 4d, 2d, 5d, 3d, 6d};
+		System.out.println("testTranspose2: " + r);
+		Assert.assertArrayEquals(expectedResult, result, 0d);
+	}
+	
+	@Test
+	public void testTranspos3(){
+		matrix = factory.newMatrix(3, 2, new double[]{1d, 2d, 3d, 4d, 5d, 6d});
+		Result r = matrix.T();
+		double[] result = r.getRawData();
+		double[] expectedResult = new double[]{1d, 3d, 5d, 2d, 4d, 6d};
+		System.out.println("testTranspose3: " + r);
+		Assert.assertArrayEquals(expectedResult, result, 0d);
+	}
+
 	
 	@Test
 	public void testMultiplication(){
@@ -220,6 +245,11 @@ public class SimpleMatrixTest {
 			return Math.log(input[0]);
 		}
 		
+		@Override
+		public double apply(double a, double b) {
+			throw new UnsupportedOperationException();
+		}
+
 		public String getName(){
 			return "ln";
 		}		

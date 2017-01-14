@@ -37,7 +37,7 @@ public class SigmoidNeuralNetwork extends AbstractNetwork {
 
 		protected static double calc(double[] input) {
 			assert(input.length == 1);
-			return 1/(1-Math.exp(input[0]));
+			return 1.0/(1.0+Math.exp(-1.0*input[0]));
 		}
 		
 		@Override

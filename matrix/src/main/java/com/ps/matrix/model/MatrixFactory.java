@@ -11,6 +11,7 @@ public interface MatrixFactory {
 	public Matrix newColumnMatrix(Vector column);
 	public Matrix newMatrix(int rows, int columns);
 	public Matrix newMatrix(int rows, int columns, double value);
+	public Matrix newMatrix(int rows, int columns, double[] value);
 	public Matrix newMatrix(int rows, int columns, ValueGenerator generator);
 	public Vector newMatrix(JSONArray json);
 		

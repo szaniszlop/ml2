@@ -80,4 +80,10 @@ public class SimpleMatrixFactory implements MatrixFactory {
 		return m;
 	}
 
+	@Override
+	public Matrix newMatrix(int rows, int columns, double[] value) {
+		Matrix m = new SimpleMatrix(rows, columns, value);
+		return m;
+	}
+
 }
