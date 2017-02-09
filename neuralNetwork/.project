@@ -14,11 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>src/test/java/com/ps/neuron/network/mnist_test.json</name>
-			<type>1</type>
-			<location>C:/work/ml2/ml2/neuralNetwork/src/test/java/com/ps/neuron/network/mnist_test.json</location>
-		</link>
-	</linkedResources>
 </projectDescription>

@@ -31,6 +31,11 @@ public class SigmoidNeuralNetwork extends AbstractNetwork {
 		}
 
 		@Override
+		public double apply(double a, double b) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
 		public String getName() {
 			return "Sigma";
 		}
@@ -47,6 +52,11 @@ public class SigmoidNeuralNetwork extends AbstractNetwork {
 				@Override
 				public String getName() {
 					return "Sigma_prime";
+				}
+
+				@Override
+				public double apply(double a, double b) {
+					throw new UnsupportedOperationException();
 				}
 
 				@Override

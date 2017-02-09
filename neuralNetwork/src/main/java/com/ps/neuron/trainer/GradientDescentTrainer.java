@@ -247,6 +247,11 @@ public class GradientDescentTrainer implements Trainer {
 		}
 
 		@Override
+		public double apply(double a, double b) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
 		public String getName() {
 			return "*"+multiplier;
 		}

@@ -14,8 +14,8 @@ import com.ps.neuron.trainer.GradientDescentTrainer;
 public class SimpleNetworkTest extends NetworkTestHelper{
 
 	public static final int MINI_BATCH_SIZE = 10;
-	public static final double NI = 0.1;
-	public static final int EPOCHS = 20;
+	public static final double NI = 0.5;
+	public static final int EPOCHS = 50;
 	
 	TraineableNetwork n;
 	Trainer t;
